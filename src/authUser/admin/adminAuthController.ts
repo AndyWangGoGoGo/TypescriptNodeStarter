@@ -1,9 +1,18 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { Request, Response, NextFunction } from "express";
 import { ErrCode, AuthController } from "../controllers/authController";
+import { IAuth } from "../../auth/oauth2/iauth";
+import { IAuthUserRepository } from "../repositories/iauthUserRepository";
+import { IAuthModelsRepository } from "../../auth/oauth2/iauthModelsRepository";
+import { Roles } from "../../auth/models/oauthUser";
 import logger from "../../utils/logger";
 
 export class AdminAuthController extends AuthController {
+    constructor(iauth: IAuth, authUserRepository: IAuthUserRepository, models: IAuthModelsRepository){
+        super(iauth,authUserRepository,models)
+        this.roles = Roles.Staff;
+        this.clientType = 0;
+    }
 
     getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
         try{

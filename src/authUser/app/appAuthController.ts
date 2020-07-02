@@ -1,11 +1,19 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
-import logger from "../../utils/logger";
 import { ErrCode, AuthController } from "../controllers/authController";
-import { Roles } from "../repositories/authUserRepository";
+import { IAuth } from "../../auth/oauth2/iauth";
+import { IAuthUserRepository } from "../repositories/iauthUserRepository";
+import { IAuthModelsRepository } from "../../auth/oauth2/iauthModelsRepository";
+import { Roles } from "../../auth/models/oauthUser";
+import logger from "../../utils/logger";
 
 export class AppAuthController extends AuthController {
+    constructor(iauth: IAuth, authUserRepository: IAuthUserRepository, models: IAuthModelsRepository){
+        super(iauth,authUserRepository,models)
+        this.roles = Roles.Staff;
+        this.clientType = 1;
+    }
 
     /**
      * @api {POST} /api/v1/auth/token/code Token/code
@@ -101,7 +109,7 @@ export class AppAuthController extends AuthController {
         }
 
         try {
-            const client = this._models.getClient(client_id, client_secret)
+            const client = await this._models.getClient(client_id, client_secret)
             if (!client) {
                 return this.responseFail(400, null, "Client is not valid.", res);
             }

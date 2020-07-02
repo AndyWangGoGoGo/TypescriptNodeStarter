@@ -40,13 +40,12 @@ export class OAuth2 implements IAuth {
                         "refreshTokenExpiresAt": token.refreshTokenExpiresAt,
                         "scope": token.scope
                     }
-
                 }
                 return clientAuth;
             })
             .catch((err) => {
                 logger.info(`authenticateHandler err:${err}`);
-                return null;
+                return err;
             });
     }
 
@@ -97,8 +96,9 @@ export class OAuth2 implements IAuth {
                  
                 return clientAuth;
             })
-            .catch(()=>{
-                return null;
+            .catch((err)=>{
+                logger.info(err);
+                return err;
             });
     }
 

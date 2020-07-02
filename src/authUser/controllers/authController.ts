@@ -39,10 +39,10 @@ export class AuthController {
     protected _models: IAuthModelsRepository;
     private readonly ENVIRONMENT = process.env.NODE_ENV;
     private readonly dev = this.ENVIRONMENT === "development"; // Anything else is treated as 'dev'
-    private _roles: string;
-    private _clientType: number;
+    protected roles: string;
+    protected clientType: number;
 
-    constructor(iauth: IAuth, authUserRepository: IAuthUserRepository, models: IAuthModelsRepository, roles: string, clientType: number) {
+    constructor(iauth: IAuth, authUserRepository: IAuthUserRepository, models: IAuthModelsRepository) {
         this._iauth = iauth;
 
         this._mailer = new Mailer();
@@ -54,9 +54,6 @@ export class AuthController {
         this._authUserRepository = authUserRepository;
         this._timeout = 5 * 60 * 1000;
         this._models = models;
-
-        this._roles = roles;
-        this._clientType = clientType;
     }
 
     authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
@@ -262,7 +259,7 @@ export class AuthController {
 
         try {
             const client = await this._models.getClient(client_id, client_secret);
-            if (!client || client.clientType !== this._clientType) {
+            if (!client || client.clientType !== this.clientType) {
                 return this.responseFail(400, null, "Client is invalid!", res);
             }
             const existUser = await this._models.getUser({ email });
@@ -270,7 +267,7 @@ export class AuthController {
                 return this.responseWarn(200, { code: ErrCode.EMAIL_EXISTS }, "Account with that email address already exists.", res);
             }
             else{
-                const newUser = await this._authUserRepository.createMailUser(email, password, this._roles, this.VALID_SCOPES[0])
+                const newUser = await this._authUserRepository.createMailUser(email, password, this.roles, this.VALID_SCOPES[0])
                 if(!newUser){
                     this.responseWarn(200, { code: ErrCode.INVALID_USER }, "Signup failed.", res);
                 }
@@ -278,7 +275,7 @@ export class AuthController {
             req.body.username = email;
             req.body.grant_type = this.VALID_GRANTS[0];
             req.body.scope = this.VALID_SCOPES[0];
-            req.body.roles = this._roles;
+            req.body.roles = this.roles;
             next();
             this.setCodeTimeout(this._mailCodes, email, 1000);
         }
@@ -347,7 +344,7 @@ export class AuthController {
 
         try {
             const client = await this._models.getClient(client_id, client_secret);
-            if (!client || client.clientType !== this._clientType) {
+            if (!client || client.clientType !== this.clientType) {
                 return this.responseFail(400, null, "Client is invalid!", res);
             }
 
@@ -358,7 +355,7 @@ export class AuthController {
                     existUser.username = phone.toString();
                     existUser.password = password;
                     existUser.scope = this.VALID_SCOPES[0];
-                    existUser.roles = this._roles;
+                    existUser.roles = this.roles;
                     existUser.save();
                 }
                 else{
@@ -366,7 +363,7 @@ export class AuthController {
                 }
             }
             else{
-                const newUser = await this._authUserRepository.createPhoneUser(phone, password, this._roles, this.VALID_SCOPES[0])
+                const newUser = await this._authUserRepository.createPhoneUser(phone, password, this.roles, this.VALID_SCOPES[0])
                 if(!newUser){
                     return this.responseWarn(200, { code: ErrCode.INVALID_USER }, "Signup failed.", res);
                 }
@@ -376,7 +373,7 @@ export class AuthController {
             req.body.username = phone.toString();
             req.body.grant_type = this.VALID_GRANTS[0];
             req.body.scope = this.VALID_SCOPES[0];
-            req.body.roles = this._roles;
+            req.body.roles = this.roles;
             next();
             this.setCodeTimeout(this._phoneCodes, phone, 1000);
         }

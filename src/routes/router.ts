@@ -7,12 +7,11 @@ import { AppAuthController } from "../authUser/app/appAuthController";
 import { OAuth2 } from "../auth/oauth2/oauth2";
 import { OAuthModelsRepository } from "../auth/oauth2/oauthModelsRepository";
 
-import { Roles, AuthUserRepository } from "../authUser/repositories/authUserRepository";
+import { AuthUserRepository } from "../authUser/repositories/authUserRepository";
 import { AdminAuthRouter } from "../authUser/admin/adminAuthRouter";
 import { AdminAuthController } from "../authUser/admin/adminAuthController";
 
 export class Router {
-    //Initial router
     private _authRouter: AppAuthRouter;
     private _adminAuthRouter: AdminAuthRouter;
     private _clientRouter: ClientRouter;
@@ -26,15 +25,15 @@ export class Router {
         const authUserRepository = new AuthUserRepository(authModelsRepository);
         const auth = new OAuth2(authModelsRepository);
 
-        const authController = new AppAuthController(auth, authUserRepository, authModelsRepository, Roles.User, 1);
+        const authController = new AppAuthController(auth, authUserRepository, authModelsRepository);
         this._authRouter = new AppAuthRouter(authController);
 
-        const adminAuthController = new AdminAuthController(auth, authUserRepository, authModelsRepository, Roles.Staff, 0);
+        const adminAuthController = new AdminAuthController(auth, authUserRepository, authModelsRepository);
         this._adminAuthRouter = new AdminAuthRouter(adminAuthController);
     }
 
     //registered routing.
-    routePrv = (app): void => {
+    initializeRouter = (app): void => {
         this._authRouter.router(app);
         this._adminAuthRouter.router(app);
         this._clientRouter.router(app);

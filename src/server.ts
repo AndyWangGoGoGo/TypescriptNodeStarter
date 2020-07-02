@@ -1,6 +1,6 @@
 import app from "./app";
 import logger from "./utils/logger";
 
-app.listen(app.get("port"), () => {
-    logger.info(`Server running at http://localhost:${app.get("port")} in ${app.get("env")}`);
+app.listen(process.env.PORT || 3001, () => {
+    logger.info(`Server running at http://localhost:${process.env.PORT} in ${process.env.NODE_ENV}`);
 });
