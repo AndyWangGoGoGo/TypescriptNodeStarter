@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express, { Router } from "express";
 import { ClientController } from "./clientController";
 
 export class ClientRouter {
@@ -25,7 +25,7 @@ export class ClientRouter {
             .delete(this._clientController.clean);
     }
 
-    router = (app): void => {
+    router = (app: express.Application): void => {
         app.use("/api/v1/admin/clients", this._router);
     }
 }

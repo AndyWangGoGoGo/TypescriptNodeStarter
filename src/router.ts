@@ -1,15 +1,15 @@
-import { ClientRouter } from "../auth/client/clientRouter";
-import { ClientRepository } from "../auth/client/clientRepository";
-import { ClientController } from "../auth/client/clientController";
+import { ClientRouter } from "./auth/client/clientRouter";
+import { ClientRepository } from "./auth/client/clientRepository";
+import { ClientController } from "./auth/client/clientController";
 
-import { AppAuthRouter } from "../authUser/app/appAuthRouter";
-import { AppAuthController } from "../authUser/app/appAuthController";
-import { OAuth2 } from "../auth/oauth2/oauth2";
-import { OAuthModelsRepository } from "../auth/oauth2/oauthModelsRepository";
+import { AppAuthRouter } from "./authUser/app/appAuthRouter";
+import { AppAuthController } from "./authUser/app/appAuthController";
+import { OAuth2 } from "./auth/oauth2/oauth2";
+import { OAuthModelsRepository } from "./auth/oauth2/oauthModelsRepository";
 
-import { AuthUserRepository } from "../authUser/repositories/authUserRepository";
-import { AdminAuthRouter } from "../authUser/admin/adminAuthRouter";
-import { AdminAuthController } from "../authUser/admin/adminAuthController";
+import { AuthUserRepository } from "./authUser/repositories/authUserRepository";
+import { AdminAuthRouter } from "./authUser/admin/adminAuthRouter";
+import { AdminAuthController } from "./authUser/admin/adminAuthController";
 
 export class Router {
     private _authRouter: AppAuthRouter;
