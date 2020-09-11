@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/interface-name-prefix */
-import {Request, Response, NextFunction} from "express";
+import { Request, Response, NextFunction } from "express";
 
-export interface IAuth
-{
+export interface IAuth {
     authenticateHandler(req: Request, res: Response, next: NextFunction): Promise<IClientAuth>;
     tokenHandler(req: Request, res: Response, next: NextFunction): Promise<boolean | IClientAuth>;
 }
 
-export interface IClientAuth{
+export interface IClientAuth {
     userId: string,
     clientId: string,
     accessToken: string,

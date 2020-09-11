@@ -1,8 +1,8 @@
 class RandomCode {
     private static _instance: RandomCode;
-    public static get Instance(): RandomCode{
-        if(!this._instance){
-            this._instance= new RandomCode();
+    public static get Instance(): RandomCode {
+        if (!this._instance) {
+            this._instance = new RandomCode();
         }
         return this._instance;
     }
@@ -31,4 +31,4 @@ class RandomCode {
     }
 }
 
-export default RandomCode.Instance;
+export const Random = RandomCode.Instance;

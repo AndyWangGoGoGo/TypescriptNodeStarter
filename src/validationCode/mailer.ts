@@ -2,11 +2,10 @@ import { IMailer } from "./imailer";
 import NodeMailer from "nodemailer";
 import { Configs } from "./configs";
 
-export class Mailer implements IMailer
-{
+export class Mailer implements IMailer {
     private _fromMail: string;
-    private _transporter; 
-    
+    private _transporter;
+
     /**
      * Send Email
      * @description Send email to target email
@@ -16,21 +15,19 @@ export class Mailer implements IMailer
      * @param {string} authUser                    Generated ethereal user
      * @param {string} authPass                    Generated ethereal password
      */
-    constructor()
-    {
+    constructor() {
         this._fromMail = Configs.SENDGRID_USER;
         let senderSecure = false;
-        
+
         //true for 465, false for other ports
         //if true the connection will use TLS when connecting to server. If false (the default) then TLS is used if server supports the STARTTLS
-        if(Configs.SENDGRID_PORT === 465)
-        {
+        if (Configs.SENDGRID_PORT === 465) {
             senderSecure = true;
         }
         this._transporter = NodeMailer.createTransport({
-            host:Configs.SENDGRID_HOST,
-            port:Configs.SENDGRID_PORT,
-            secure:senderSecure,
+            host: Configs.SENDGRID_HOST,
+            port: Configs.SENDGRID_PORT,
+            secure: senderSecure,
             auth: {
                 user: Configs.SENDGRID_USER,
                 pass: Configs.SENDGRID_PASSWORD
@@ -38,29 +35,27 @@ export class Mailer implements IMailer
         });
     }
 
-    sendCode = async (mail: string, code: string): Promise<unknown>=>{
+    sendCode = async (mail: string, code: string): Promise<unknown> => {
         const mailOptions = {
             to: mail,
             from: this._fromMail,
-            subject: "账号邮件验证码",
-            text: `您好！\n\n为确保是您本人操作，请在邮件验证码输入框输入下方验证码：${code} \n请勿向任何人泄露您收到的验证码。\n\n此致\n瑞木`
+            subject: "Account email verification code",
+            text: `Hello! \n\n To ensure that it is your own operation，please enter the verification code below in the mail verification Code input box：${code} \n Please do not disclose the verification code you have received to anyone. \n\n Best wishes for you!\n ****`
         };
-        console.log(`to:${mail},code:${code},from:${this._fromMail}`);
-        return new Promise((resolve,reject)=>{
+
+        return new Promise((resolve, reject) => {
             this._transporter.sendMail(mailOptions, (err) => {
-                if(err)
-                {
+                if (err) {
                     reject(err);
                 }
-                else
-                {
+                else {
                     resolve();
                 }
             });
         })
     }
 
-    sendResetPasswordEmail = async (mail: string): Promise<unknown>=>{
+    sendResetPasswordEmail = async (mail: string): Promise<unknown> => {
         const mailOptions = {
             to: mail,
             from: this._fromMail,
@@ -68,21 +63,19 @@ export class Mailer implements IMailer
             text: `Hello,\n\nThis is a confirmation that the password for your account ${mail} has just been changed.\n`
         };
 
-        return new Promise((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             this._transporter.sendMail(mailOptions, (err) => {
-                if(err)
-                {
+                if (err) {
                     reject(err);
                 }
-                else
-                {
+                else {
                     resolve();
                 }
             });
         })
     }
 
-    sendForgotPasswordEmail = async (host: string, token: string, mail: string): Promise<unknown>=>{
+    sendForgotPasswordEmail = async (host: string, token: string, mail: string): Promise<unknown> => {
         const mailOptions = {
             to: mail,
             from: this._fromMail,
@@ -93,14 +86,12 @@ export class Mailer implements IMailer
                If you did not request this, please ignore this email and your password will remain unchanged.\n`
         };
 
-        return new Promise((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             this._transporter.sendMail(mailOptions, (err) => {
-                if(err)
-                {
+                if (err) {
                     reject(err);
                 }
-                else
-                {
+                else {
                     resolve();
                 }
             });

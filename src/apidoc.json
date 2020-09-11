@@ -1,7 +1,7 @@
-{ 
+{
     "name": "Duo WebApi",
     "version": "1.0.0",
     "description": "Duo backend webapi.",
     "title": "DUOWEBAPI",
-    "url" : "http://duo-api.erealmsoft.com"
+    "url": ""
 }

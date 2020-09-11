@@ -3,9 +3,7 @@ import { OAuthClientDocument } from "../models/oauthClient";
 import { AuthorizationCodeDocument } from "../models/authorizationCode";
 import { OAuthTokenDocument } from "../models/oauthToken";
 
-// eslint-disable-next-line @typescript-eslint/interface-name-prefix
-export interface IAuthModelsRepository
-{
+export interface IAuthModelsRepository {
     getAccessToken(accessToken): Promise<OAuthTokenDocument>;
     getRefreshToken(refreshToken): Promise<OAuthTokenDocument>;
     getAuthorizationCode(authorizationCode): Promise<AuthorizationCodeDocument>;

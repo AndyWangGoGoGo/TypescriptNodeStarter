@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { IAuthUserRepository } from "./iauthUserRepository";
 import { OAuthUser, OAuthUserDocument, Roles } from "../../auth/models/oauthUser";
 import { IAuthModelsRepository } from "../../auth/oauth2/iauthModelsRepository";

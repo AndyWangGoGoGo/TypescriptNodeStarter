@@ -34,8 +34,8 @@ const OAuthUserSchema = new Schema({
     scope: { type: String, default: "read" },
     roles: {
         type: String,
-        enum: ["user", "staff", "super"],
-        default: "user",
+        enum: ["User", "Staff", "Super"],
+        default: "User",
         required: "invalid role"
     },
     status: {
