@@ -4,13 +4,12 @@ import mongoose from "mongoose";
 import path from "path";
 import bodyParser from "body-parser";
 import { Router } from "./router";
-import { MONGODB_URI } from "./utils/dotENV";
 
-class App {
+export class App {
     app: express.Application = express();
     private _routes: Router;
 
-    constructor(mongoUrl: string) {
+    constructor (mongoUrl: string) {
         this.app = express();
         this.initializeStaticFolder(this.app);
         this.initializeMiddlewares(this.app);
@@ -20,21 +19,21 @@ class App {
 
         this.mongoSetup(mongoUrl);
         this.app.use((request: Request, response: Response) => {
-            return response.status(404).json({ code: -1, data: null, msg: "Notfound" })
+            return response.status(404).json({ code: -1, data: null, msg: "Notfound" });
         });
     }
 
-    private initializeStaticFolder = (app: express.Application): void =>{
+    private initializeStaticFolder = (app: express.Application): void => {
         const folder = "assets";
         const fileFolder = path.resolve(folder);
-        app.use(express.static(fileFolder))
-    }
+        app.use(express.static(fileFolder));
+    };
 
-    private initializeMiddlewares = (app: express.Application): void =>{
+    private initializeMiddlewares = (app: express.Application): void => {
         app.use(express.json());
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
-    }
+    };
 
     private mongoSetup = (connStr: string): void => {
         mongoose.connect(connStr, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false }).then(
@@ -42,7 +41,5 @@ class App {
         ).catch(
             (err) => { logger.error("MongoDB connection error. Please make sure MongoDB is running. " + err); }
         );
-    }
+    };
 }
-
-export default new App(MONGODB_URI).app;

@@ -17,16 +17,16 @@ export class ClientRepository implements IClientRepository {
         if (existingClient) {
             return null;
         }
-        else{
+        else {
             return client.save();
         }
-    }
+    };
 
     getClients = async (page: number, pageSize: number): Promise<OAuthClientDocument[]> => {
         const clients = await OAuthClient.find({ status: { $ne: -1 } }).limit(pageSize).skip((page - 1) * pageSize)
             .select("clientId clientName clientType clientSecret grants createdAt");
         return clients;
-    }
+    };
 
     update = async (clientId: string, clientName: string, body: object): Promise<OAuthClientDocument> => {
         const existingClient = await OAuthClient.findOne({ clientName });
@@ -36,7 +36,7 @@ export class ClientRepository implements IClientRepository {
         const localClient = await OAuthClient.findOneAndUpdate({ _id: clientId }, body, { new: true })
             .select("clientId clientName clientType clientSecret grants createdAt");
         return localClient;
-    }
+    };
 
     delete = async (clientId: string): Promise<OAuthClientDocument> => {
         const localClient = await OAuthClient.findOne({ _id: clientId });
@@ -45,10 +45,10 @@ export class ClientRepository implements IClientRepository {
         }
         localClient.status = -1;
         return localClient.save();
-    }
+    };
 
     //for autotest
     clean = async (clientId: string): Promise<any> => {
         return OAuthClient.deleteOne({ _id: clientId });
-    }
+    };
 }

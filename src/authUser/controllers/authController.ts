@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 import { IAuth } from "../../auth/oauth2/iauth";
 import { Mailer } from "../../validationCode/mailer";
 import { IMailer } from "../../validationCode/imailer";
-import randomCode from "../../utils/randomCode";
+import { Random } from "../../utils/randomCode";
 import { ISMS } from "../../validationCode/isms";
 import { SMS } from "../../validationCode/sms";
 import { IAuthUserRepository } from "../repositories/iauthUserRepository";
@@ -42,7 +41,7 @@ export class AuthController {
     protected roles: string;
     protected clientType: number;
 
-    constructor(iauth: IAuth, authUserRepository: IAuthUserRepository, models: IAuthModelsRepository) {
+    constructor (iauth: IAuth, authUserRepository: IAuthUserRepository, models: IAuthModelsRepository) {
         this._iauth = iauth;
 
         this._mailer = new Mailer();
@@ -74,7 +73,7 @@ export class AuthController {
             console.error(e);
             this.responseWarn(200, { code: ErrCode.INVALID_AUTHORIZE }, e, res);
         }
-    }
+    };
 
     /**
      * @api {POST} /api/v1/auth/token Token
@@ -125,10 +124,10 @@ export class AuthController {
             if (typeof data === "object") {
                 this.responseSuccess(200, data, "Success.", res);
             }
-            else if(typeof data === "boolean") {
+            else if (typeof data === "boolean") {
                 this.responseWarn(200, { code: ErrCode.INVALID_USER }, "username or password invalid.", res);
             }
-            else{
+            else {
                 this.responseWarn(200, { code: ErrCode.INVALID_USER }, "Unauthenticated user.", res);
             }
         }
@@ -136,7 +135,7 @@ export class AuthController {
             console.error(e);
             next(e);
         }
-    }
+    };
 
     /**
      * @api {POST} /api/v1/auth/token/openid Token/openid
@@ -186,10 +185,10 @@ export class AuthController {
             if (typeof data === "object") {
                 this.responseSuccess(200, data, "Success.", res);
             }
-            else if(typeof data === "boolean") {
+            else if (typeof data === "boolean") {
                 this.responseWarn(200, { code: ErrCode.INVALID_USER }, "username or password invalid.", res);
             }
-            else{
+            else {
                 this.responseWarn(200, { code: ErrCode.INVALID_USER }, "Unauthenticated user.", res);
             }
         }
@@ -197,7 +196,7 @@ export class AuthController {
             console.log(e);
             this.responseWarn(200, { code: ErrCode.INVALID_AUTHORIZE }, e, res);
         }
-    }
+    };
 
     /**
      * @api {POST} /api/v1/auth/signup/mail Signup/mail
@@ -263,12 +262,12 @@ export class AuthController {
                 return this.responseFail(400, null, "Client is invalid!", res);
             }
             const existUser = await this._models.getUser({ email });
-            if(existUser){
+            if (existUser) {
                 return this.responseWarn(200, { code: ErrCode.EMAIL_EXISTS }, "Account with that email address already exists.", res);
             }
-            else{
-                const newUser = await this._authUserRepository.createMailUser(email, password, this.roles, this.VALID_SCOPES[0])
-                if(!newUser){
+            else {
+                const newUser = await this._authUserRepository.createMailUser(email, password, this.roles, this.VALID_SCOPES[0]);
+                if (!newUser) {
                     this.responseWarn(200, { code: ErrCode.INVALID_USER }, "Signup failed.", res);
                 }
             }
@@ -283,7 +282,7 @@ export class AuthController {
             logger.error(err);
             next(err);
         }
-    }
+    };
 
     /**
      * @api {POST} /api/v1/auth/signup/phone Signup/phone
@@ -349,8 +348,8 @@ export class AuthController {
             }
 
             const existUser = await this._models.getUser({ phone });
-            
-            if(existUser){
+
+            if (existUser) {
                 if (existUser.openid === existUser.username) {
                     existUser.username = phone.toString();
                     existUser.password = password;
@@ -358,13 +357,13 @@ export class AuthController {
                     existUser.roles = this.roles;
                     existUser.save();
                 }
-                else{
+                else {
                     return this.responseWarn(200, { code: ErrCode.PHONE_EXISTS }, "Account with that phone number already exists.", res);
                 }
             }
-            else{
-                const newUser = await this._authUserRepository.createPhoneUser(phone, password, this.roles, this.VALID_SCOPES[0])
-                if(!newUser){
+            else {
+                const newUser = await this._authUserRepository.createPhoneUser(phone, password, this.roles, this.VALID_SCOPES[0]);
+                if (!newUser) {
                     return this.responseWarn(200, { code: ErrCode.INVALID_USER }, "Signup failed.", res);
                 }
             }
@@ -381,7 +380,7 @@ export class AuthController {
             logger.error(err);
             next(err);
         }
-    }
+    };
 
     /**
      * @api {POST} /api/v1/auth/code/mail Code/mail
@@ -412,7 +411,7 @@ export class AuthController {
         }
 
         const mail = req.body.email;
-        const code = randomCode.generateCode(5);
+        const code = Random.generateCode(5);
         console.log(`mail:${mail},code:${code}`);
         this._mailer.sendCode(mail, code)
             .then(() => {
@@ -429,7 +428,7 @@ export class AuthController {
                 console.error(`send mail code faild:${err}`);
                 return this.responseWarn(200, null, err, res);
             });
-    }
+    };
 
     /**
      * @api {POST} /api/v1/auth/code/phone Code/phone
@@ -459,7 +458,7 @@ export class AuthController {
         }
 
         const phone = req.body.phone;
-        const code = randomCode.generateCode(5);
+        const code = Random.generateCode(5);
         console.log(`phone:${phone},code:${code}`);
         this._phone.SendSMS(phone, code)
             .then(() => {
@@ -476,7 +475,7 @@ export class AuthController {
                 console.error(`send phone code faild:${err}`);
                 return this.responseWarn(200, null, err, res);
             });
-    }
+    };
 
     /**
      * @api {POST} /api/v1/auth/rebind/phone RebindPhone
@@ -523,17 +522,17 @@ export class AuthController {
         }
 
         try {
-            const existUser = await this._models.getUser({ phone: phone })
-            if(existUser){
+            const existUser = await this._models.getUser({ phone: phone });
+            if (existUser) {
                 return this.responseWarn(200, { code: ErrCode.PHONE_EXISTS }, "The phone is already existed in system.", res);
             }
 
             const newUser = await this._authUserRepository.rebindPhone2OpenId(phone, openid);
-            if(newUser){
+            if (newUser) {
                 this.setCodeTimeout(this._phoneCodes, phone, 1000);
                 return this.responseSuccess(200, newUser, "Success.", res);
             }
-            else{
+            else {
                 return this.responseWarn(200, { code: ErrCode.INVALID_INFO }, "Invalid openid.", res);
             }
         }
@@ -541,7 +540,7 @@ export class AuthController {
             logger.error(e);
             next(e);
         }
-    }
+    };
 
     //for test
     cleanAuth = async (req: Request, res: Response, next: NextFunction): Promise<unknown> => {
@@ -553,7 +552,7 @@ export class AuthController {
             logger.error(e);
             next(e);
         }
-    }
+    };
 
     protected setCodeTimeout = (codes: Map<string, string>, key: string, timeout: number): void => {
         setTimeout(() => {
@@ -561,7 +560,7 @@ export class AuthController {
                 codes.delete(key);
             }
         }, timeout);
-    }
+    };
 
     protected responseSuccess = (statusCode: number, data: object, msg: string, res: Response): void => {
         res.status(statusCode).json({
@@ -569,7 +568,7 @@ export class AuthController {
             data,
             msg
         });
-    }
+    };
 
     protected responseWarn = (statusCode: number, data: object, msg: string, res: Response): void => {
         res.status(statusCode).json({
@@ -577,7 +576,7 @@ export class AuthController {
             data,
             msg
         });
-    }
+    };
 
     protected responseFail = (statusCode: number, data: object, msg: string, res: Response): void => {
         res.status(statusCode).json({
@@ -585,5 +584,5 @@ export class AuthController {
             data,
             msg
         });
-    }
+    };
 }

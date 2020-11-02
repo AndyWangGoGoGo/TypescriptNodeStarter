@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import randomCode from "../../utils/randomCode";
+import { Random } from "../../utils/randomCode";
 
 const Schema = mongoose.Schema;
 
@@ -28,9 +28,9 @@ const ClientSchema = new Schema({
     clientSecret: {
         type: String,
         required: true,
-        default: randomCode.generateCode(20),
+        default: Random.generateCode(20),
     },
-    grants:{
+    grants: {
         type: Array,
         required: true
     },
@@ -46,4 +46,4 @@ const ClientSchema = new Schema({
     }
 }, { timestamps: true });
 
-export const OAuthClient = mongoose.model<OAuthClientDocument>("OAuthClient",ClientSchema);
+export const OAuthClient = mongoose.model<OAuthClientDocument>("OAuthClient", ClientSchema);

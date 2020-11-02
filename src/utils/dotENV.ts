@@ -14,7 +14,7 @@ else if (ENVIRONMENT === "sit") {
     option = "sit";
 }
 
-const fileName = path.resolve("env", option +".env");
+const fileName = path.resolve("env", option + ".env");
 
 if (fs.existsSync(fileName)) {
     const result = dotenv.config({
@@ -26,7 +26,8 @@ if (fs.existsSync(fileName)) {
     }
 }
 
-export const MONGODB_URI = process.env.MONGODB_URI
+export const MONGODB_URI = process.env.MONGODB_URI;
+export const PORT = process.env.PORT;
 
 if (!MONGODB_URI) {
     logger.error(`${option}:No mongo connection string. Set MONGODB_URI environment variable.`);

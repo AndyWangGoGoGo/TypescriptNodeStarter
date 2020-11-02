@@ -1,6 +1,9 @@
-import app from "./app";
+import { App } from "./app";
 import logger from "./utils/logger";
+import { MONGODB_URI, PORT } from "./utils/dotENV";
 
-app.listen(process.env.PORT || 3001, () => {
-    logger.info(`Server running at http://localhost:${process.env.PORT} in ${process.env.NODE_ENV}`);
+const application = new App(MONGODB_URI);
+
+application.app.listen(PORT || 3001, () => {
+    logger.info(`Server running at http://localhost:${PORT || 3001} in ${application.app.get("env")}`);
 });
